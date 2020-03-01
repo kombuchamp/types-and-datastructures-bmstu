@@ -10,5 +10,8 @@
     "license": "ISC",
     "devDependencies": {
         "jest": "^25.1.0"
+    },
+    "dependencies": {
+        "chart.js": "^2.9.3"
     }
 }
