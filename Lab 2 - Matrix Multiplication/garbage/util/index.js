@@ -57,7 +57,34 @@ function multiplyMatricesWinograd(A, B) {
     return C;
 }
 
+function profileMatrixMultiplication(multiply, size) {
+    const matrix1 = getMatrix(size);
+    const matrix2 = getMatrix(size);
+
+    performance.mark('start');
+    multiply(matrix1, matrix2);
+    performance.mark('end');
+    performance.measure('a', 'start', 'end');
+
+    const result = performance.getEntriesByType('measure')[0].duration;
+
+    performance.clearMarks();
+    performance.clearMeasures();
+
+    return result; // Runs on browser
+}
+
+function getMatrix({ rows, cols }) {
+    const matrix = [];
+    for (let i = 0; i < rows; ++i)
+        matrix[i] = new Array(cols).fill(0).map(() => Math.random());
+    return matrix;
+}
+
+profileMatrixMultiplication(multiplyMatrices, { rows: 10, cols: 10 });
+
 module.exports = {
     multiplyMatrices,
     multiplyMatricesWinograd,
+    profileMatrixMultiplication,
 };

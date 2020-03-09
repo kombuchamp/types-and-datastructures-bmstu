@@ -1,3 +1,6 @@
+import './index.css';
+import Chart from 'chart.js';
+
 const standardEven = document.getElementById('standardEven');
 const standardUneven = document.getElementById('standardUneven');
 const winogradEven = document.getElementById('winogradEven');
