@@ -54,6 +54,12 @@ function multiplyMatricesWinograd(A, B) {
                 C[i][j] += (A[i][k - 1] + B[k][j]) * (A[i][k] + B[k - 1][j]);
             }
         }
+        if(N % 2 === 1){
+            for (let i = 0; i < M; ++i)
+                for (let j = 0; j < Q; ++j) {
+                    C[i][j] += A[i][N - 1] * B[N - 1][j];
+            }
+        }
     return C;
 }
 
