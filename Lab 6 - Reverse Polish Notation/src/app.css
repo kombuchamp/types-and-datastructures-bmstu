@@ -1,0 +1,19 @@
+.root {
+    position: relative;
+    width: 70vw;
+    margin: auto;
+}
+.options {
+    display: flex;
+    width: 100%;
+}
+.options--option {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.options--option input {
+    width: 100%;
+}
