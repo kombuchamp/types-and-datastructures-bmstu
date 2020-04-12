@@ -1,3 +1,4 @@
+import './app.css';
 const Chart = require('chart.js');
 
 let ctx = document.getElementById('myChart').getContext('2d');
