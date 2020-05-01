@@ -35,7 +35,7 @@ export function evalExpression(expression, x = 0) {
     // Convert input string to reverse polish notation:
     let curOp;
     input.forEach((token) => {
-        if (!isNaN(token) || token === 'x') {
+        if (!isNaN(token) || token === 'x' || token === '-x') {
             // Token is a number
             rpn.push(token);
         } else if (operations.getOperationSigns().includes(token)) {
@@ -61,7 +61,7 @@ export function evalExpression(expression, x = 0) {
     rpn.forEach((token) => {
         if (!isNaN(token)) {
             operands.push(Number(token));
-        } else if (token === 'x') {
+        } else if (token === 'x' || token === '-x') {
             operands.push(x);
         } else {
             if (token === operations.sin || token === operations.cos) {
@@ -124,7 +124,8 @@ function tokenize(str) {
         if (
             !operations.getOperationSigns().includes(token) && // token is not an op symbok
             isNaN(token) && // token is not a valid number
-            token !== 'x' // token is not a variable
+            token !== 'x' &&
+            token !== '-x' // token is not a variable
         ) {
             throw new Error(`Invalid token: ${token}`);
         }
