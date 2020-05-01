@@ -1,5 +1,5 @@
 const operations = {
-    add: '+', //TODO: add,sub
+    add: '+',
     sub: '-',
     mul: '*',
     div: '/',
@@ -27,7 +27,7 @@ const precedence = {
     [operations.openBracket]: 0,
 };
 
-let expression = '2+2'; // TODO: plus got lost
+let expression = '2+2';
 
 let input = tokenize(expression);
 let rpn = [];
