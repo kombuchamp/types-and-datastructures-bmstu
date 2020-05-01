@@ -27,58 +27,58 @@ const precedence = {
     [operations.openBracket]: 0,
 };
 
-let expression = '2+2';
+export function evalExpression(expression, x = 0) {
+    let input = tokenize(expression);
+    let rpn = [];
+    let ops = [];
 
-let input = tokenize(expression);
-let rpn = [];
-let ops = [];
-
-console.log('TOKENS', input);
-
-// Convert input string to reverse polish notation:
-let curOp;
-input.forEach((token) => {
-    if (!isNaN(token) || token === 'x') {
-        // Token is a number
-        rpn.push(token);
-    } else if (operations.getOperationSigns().includes(token)) {
-        // Token is an operator
-        if (token === ')') {
-            while ((curOp = ops.pop()) !== '(') {
-                rpn.push(curOp);
+    // Convert input string to reverse polish notation:
+    let curOp;
+    input.forEach((token) => {
+        if (!isNaN(token) || token === 'x') {
+            // Token is a number
+            rpn.push(token);
+        } else if (operations.getOperationSigns().includes(token)) {
+            // Token is an operator
+            if (token === ')') {
+                while ((curOp = ops.pop()) !== '(') {
+                    rpn.push(curOp);
+                }
+            } else if (!ops.length || token === '(' || precedence[token] >= precedence[ops[ops.length - 1]]) {
+                ops.push(token);
+            } /* precedence is lower */ else {
+                do {
+                    rpn.push(ops.pop());
+                } while (precedence[token] <= precedence[ops[ops.length - 1]]);
+                ops.push(token);
             }
-        } else if (!ops.length || token === '(' || precedence[token] >= precedence[ops[ops.length - 1]]) {
-            ops.push(token);
-        } /* precedence is lower */ else {
-            do {
-                rpn.push(ops.pop());
-            } while (precedence[token] <= precedence[ops[ops.length - 1]]);
-            ops.push(token);
         }
-    }
-});
-if (ops.length) rpn = [...rpn, ...ops.slice().reverse()];
+    });
+    if (ops.length) rpn = [...rpn, ...ops.slice().reverse()];
 
-console.log('RPN', rpn);
-
-// Evaluate RPN
-let operands = [];
-let x = 5; // Just assume x is known
-rpn.forEach((token) => {
-    if (!isNaN(token)) {
-        operands.push(Number(token));
-    } else if (token === 'x') {
-        operands.push(x);
-    } else {
-        if (token === operations.sin || token === operations.cos) {
-            operands.push(evaluate(token, operands.pop()));
+    // Evaluate RPN
+    let operands = [];
+    rpn.forEach((token) => {
+        if (!isNaN(token)) {
+            operands.push(Number(token));
+        } else if (token === 'x') {
+            operands.push(x);
         } else {
-            operands.push(evaluate(token, operands.pop(), operands.pop()));
+            if (token === operations.sin || token === operations.cos) {
+                operands.push(evaluate(token, operands.pop()));
+            } else {
+                operands.push(evaluate(token, operands.pop(), operands.pop()));
+            }
         }
-    }
-});
+    });
 
-console.log('RESULT', operands);
+    if (operands.length !== 1) {
+        throw Error(
+            `Stack has ${operands.length} operands instead of one result. Contact developer, its probably a bug`
+        );
+    }
+    return operands[0];
+}
 
 /**
  * Splits math expression into tokens
