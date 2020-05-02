@@ -69,7 +69,7 @@ function drawGraph() {
 
     let data = [];
     let labels = [];
-    for (let x = a; x < b; ++x) {
+    for (let x = a; x < b; x += h) {
         data.push({
             x,
             y: evalExpression(expression, x),
@@ -92,7 +92,9 @@ function validateValues(a, b, h, expression) {
     if (a >= b) {
         throw new Error('Right boundary should be heigher than the left one');
     }
-    // I dont check for h validity, screw it
+    if (h <= 0) {
+        throw new Error('Step should be positive integer');
+    }
 }
 
 function getFieldValue(value, alternativeValue) {
