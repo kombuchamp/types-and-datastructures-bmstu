@@ -27,7 +27,7 @@ const precedence = {
     [operations.openBracket]: 0,
 };
 
-let expression = '2+2';
+let expression = '4++';
 
 let input = tokenize(expression);
 let rpn = [];
@@ -144,6 +144,12 @@ function tokenize(str) {
  * i.e. a long switch-case
  */
 function evaluate(operator, ...args) {
+    // Check if args are valid
+    args.forEach((arg) => {
+        if (arg == null) {
+            throw new Error('Invalid expression (two operators in a row?)');
+        }
+    });
     switch (operator) {
         case operations.sin:
             return Math.sin(args[0]);
@@ -153,6 +159,6 @@ function evaluate(operator, ...args) {
         case operations.sub:
         case operations.div:
         case operations.mul:
-            return eval(args[0] + operator + args[1]);
+            return eval(args[1] + operator + args[0]);
     }
 }

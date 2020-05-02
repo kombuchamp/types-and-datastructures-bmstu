@@ -50,7 +50,11 @@ window.addEventListener('load', drawGraph);
 const form = document.getElementById('controls-form');
 form.addEventListener('submit', (e) => {
     e.preventDefault();
-    drawGraph();
+    try {
+        drawGraph();
+    } catch (err) {
+        alert(err.message);
+    }
 });
 
 function drawGraph() {
@@ -61,13 +65,10 @@ function drawGraph() {
         form.expression.value,
         form.expression.placeholder.match(/Expression\ \(\ (.*)\ \)/)[1]
     );
+    validateValues(a, b, h, expression);
+
     let data = [];
     let labels = [];
-    try {
-        validateValues(a, b, h, expression);
-    } catch (err) {
-        alert(err.message);
-    }
     for (let x = a; x < b; ++x) {
         data.push({
             x,
