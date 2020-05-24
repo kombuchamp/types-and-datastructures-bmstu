@@ -1,7 +1,12 @@
 /**
- * Final state machine
+ * Finite state machine
  */
 class FSM {
+    /**
+     * @param {Object} options
+     * @param {Array<State>} options.states - array of states
+     * @param {State} options.initialState - initial state
+     */
     constructor({ states, initialState }) {
         this.states = states;
         this.start = states[initialState] || states[0];
@@ -20,6 +25,7 @@ class FSM {
                 return checkResult;
             }
             state = this.states[checkResult];
+            // console.log(checkResult, state);
         }
         return false;
     }
