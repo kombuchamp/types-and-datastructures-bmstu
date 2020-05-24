@@ -19,6 +19,9 @@ class CRS {
          */
         this.rowIndex;
 
+        this.rows = 0;
+        this.columns = 0;
+
         if (matrix) {
             this.consumeMatrix(matrix);
         }
@@ -32,6 +35,9 @@ class CRS {
         this.values = [];
         this.columnIndex = [];
         this.rowIndex = [];
+
+        this.rows = mat.length;
+        this.columns = mat[0].length;
 
         let currentFirstValue = -1;
         let currentRow = 0;
@@ -56,17 +62,29 @@ class CRS {
         });
         this.rowIndex.push(this.values.length);
     }
+
+    toDenseMatrix() {
+        let result = [...Array(this.rows)].map(() => Array(this.columns).fill(0));
+        for (let i = 0; i < this.rows; ++i) {
+            let start = this.rowIndex[i];
+            let end = this.rowIndex[i + 1];
+            for (let idx = start; idx < end; ++idx) {
+                result[i][this.columnIndex[idx]] = this.values[idx];
+            }
+        }
+        return result;
+    }
 }
 
-console.log(
-    '----\n',
-    new CRS([
-        [0, 0, 0, 0],
-        [5, 8, 0, 0],
-        [0, 0, 3, 0],
-        [0, 6, 0, 0],
-    ])
-);
+// console.log(
+//     '----\n',
+//     new CRS([
+//         [0, 0, 0, 0],
+//         [5, 8, 0, 0],
+//         [0, 0, 3, 0],
+//         [0, 6, 0, 0],
+//     ])
+// );
 
 console.log(
     '----\n',
@@ -77,14 +95,14 @@ console.log(
     ])
 );
 
-console.log(
-    '----\n',
-    new CRS([
-        [1, 0, 0, 0, 2, 0],
-        [0, 0, 3, 4, 0, 0],
-        [0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 8, 0, 5],
-        [0, 0, 0, 0, 0, 0],
-        [0, 7, 1, 0, 0, 6],
-    ])
-);
+// console.log(
+//     '----\n',
+//     new CRS([
+//         [1, 0, 0, 0, 2, 0],
+//         [0, 0, 3, 4, 0, 0],
+//         [0, 0, 0, 0, 0, 0],
+//         [0, 0, 0, 8, 0, 5],
+//         [0, 0, 0, 0, 0, 0],
+//         [0, 7, 1, 0, 0, 6],
+//     ])
+// );
