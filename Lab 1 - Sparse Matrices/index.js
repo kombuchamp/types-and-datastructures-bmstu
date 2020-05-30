@@ -44,7 +44,7 @@ class CRS {
         mat.forEach((row, i) => {
             row.forEach((val, j) => {
                 // assume we have integers
-                if (val !== 0) {
+                if (val !== 0 && val != null) {
                     this.values.push(val);
                     this.columnIndex.push(j);
                     if (currentFirstValue < 0) {
@@ -74,6 +74,46 @@ class CRS {
         }
         return result;
     }
+
+    get(i, j) {
+        let rowStart = this.rowIndex[i];
+        let rowEnd = this.rowIndex[i + 1];
+        let result = 0;
+        for (let idx = rowStart; idx < rowEnd; ++idx) {
+            if (this.columnIndex[idx] === j) {
+                result = this.values[idx];
+                break;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Multiply to matrix
+     *
+     * Yes, straightforward and inefficient algorithm.
+     * Maybe you will be interested in checking out my Gustavson algorithm implementation
+     * on linked list-based sparse matrix
+     * @https://github.com/kombuchamp/SparseMatrices/blob/master/SparseMatrices/LLSparseMatrix.h#L184
+     * @param {CRS|number[][]} matrix
+     * @returns {number[][]}
+     */
+    multiply(matrix) {
+        if (!(matrix instanceof CRS)) matrix = new CRS(matrix);
+        if (this.rows !== matrix.columns) throw TypeError('Invalid matrix dimensions');
+        let result = [];
+        for (let i = 0; i < this.rows; ++i) {
+            for (let j = 0; j < matrix.columns; ++j) {
+                let val = 0;
+                for (let k = 0; k < this.columns; ++k) {
+                    val = val + this.get(i, k) * matrix.get(k, j);
+                }
+                if (!result[i]) result[i] = [];
+                result[i][j] = val;
+            }
+        }
+        return result;
+    }
 }
 
 // console.log(
@@ -86,14 +126,22 @@ class CRS {
 //     ])
 // );
 
-console.log(
-    '----\n',
-    new CRS([
-        [0, 0, 1, 3, 0, 0, 0, 5, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 7, 0, 1, 0, 0],
-    ])
-);
+// console.log(new CRS([
+//     [0, 0, 1, 3, 0, 0, 0, 5, 0, 0],
+//     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+//     [0, 0, 0, 0, 0, 7, 0, 1, 0, 0],
+// ]));
+
+// let m1 = new CRS([
+//     [1, 2],
+//     [3, 4],
+//     [5, 6],
+// ]);
+// let m2 = new CRS([
+//     [9, 8, 7],
+//     [6, 5, 4],
+// ]);
+// console.log(m1.multiply(m2));
 
 // console.log(
 //     '----\n',
